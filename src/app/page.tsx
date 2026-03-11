@@ -4,6 +4,9 @@ import { useState } from 'react';
 import { mockCustomers, Customer } from '@/data/mock-customers';
 import CustomerSelector from '@/components/CustomerSelector';
 import DomainHealthWidget from '@/components/DomainHealthWidget';
+import MarketIntelligenceWidget from '@/components/MarketIntelligenceWidget';
+import CustomerHealthMonitoring from '@/components/CustomerHealthMonitoring';
+import PredictiveIntelligenceWidget from '@/components/PredictiveIntelligenceWidget';
 
 export default function Home() {
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
@@ -47,17 +50,9 @@ export default function Home() {
           <section className="lg:col-span-2 space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
               <DomainHealthWidget customer={selectedCustomer} />
-              {/* Placeholders for upcoming exercises */}
-              <div className="border-2 border-dashed border-gray-200 rounded-lg p-4 text-center text-gray-500 text-sm">
-                Market Intelligence
-                <br />
-                <span className="text-xs">Exercise 6</span>
-              </div>
-              <div className="border-2 border-dashed border-gray-200 rounded-lg p-4 text-center text-gray-500 text-sm">
-                Predictive Alerts
-                <br />
-                <span className="text-xs">Exercise 8</span>
-              </div>
+              <MarketIntelligenceWidget company={selectedCustomer?.company ?? null} />
+              <CustomerHealthMonitoring customer={selectedCustomer} />
+              <PredictiveIntelligenceWidget customer={selectedCustomer} />
             </div>
           </section>
         </div>
