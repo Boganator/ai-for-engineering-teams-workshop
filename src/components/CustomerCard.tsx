@@ -1,19 +1,13 @@
 import { Customer } from '@/data/mock-customers';
+import HealthIndicator from '@/components/HealthIndicator';
 
 export interface CustomerCardProps {
   customer: Customer;
   onClick?: () => void;
 }
 
-function getHealthColor(score: number): { badge: string; text: string } {
-  if (score <= 30) return { badge: 'bg-red-500', text: 'text-red-600' };
-  if (score <= 70) return { badge: 'bg-yellow-400', text: 'text-yellow-600' };
-  return { badge: 'bg-green-500', text: 'text-green-600' };
-}
-
 export default function CustomerCard({ customer, onClick }: CustomerCardProps) {
   const { name, company, healthScore, domains } = customer;
-  const health = getHealthColor(healthScore);
   const hasDomains = domains && domains.length > 0;
 
   return (
@@ -29,10 +23,7 @@ export default function CustomerCard({ customer, onClick }: CustomerCardProps) {
           <p className="font-semibold text-gray-900 truncate">{name}</p>
           <p className="text-sm text-gray-500 truncate">{company}</p>
         </div>
-        <div className="flex items-center gap-1.5 shrink-0">
-          <span className={`inline-block w-2.5 h-2.5 rounded-full ${health.badge}`} aria-hidden="true" />
-          <span className={`text-sm font-medium ${health.text}`}>{healthScore}</span>
-        </div>
+        <HealthIndicator healthScore={healthScore} size="sm" />
       </div>
 
       {hasDomains && (
