@@ -1,48 +1,13 @@
 'use client';
 
-import { Suspense } from 'react';
-
-// Dynamic component imports with error boundaries
-const CustomerCardDemo = () => {
-  try {
-    // Try to import CustomerCard - this will work after Exercise 3
-    const CustomerCard = require('../components/CustomerCard')?.default;
-    const mockCustomers = require('../data/mock-customers')?.mockCustomers;
-    
-    if (CustomerCard && mockCustomers?.[0]) {
-      return (
-        <div className="space-y-4">
-          <p className="text-green-600 text-sm font-medium">✅ CustomerCard implemented!</p>
-          <div className="flex flex-wrap gap-4">
-            {mockCustomers.map((customer: { id: string }) => (
-              <CustomerCard key={customer.id} customer={customer} />
-            ))}
-          </div>
-        </div>
-      );
-    }
-  } catch (error) {
-    // Component doesn't exist yet
-  }
-  
-  return (
-    <div className="text-gray-500 text-sm">
-      After Exercise 3, your CustomerCard components will appear here showing customer information with health scores.
-    </div>
-  );
-};
-
-const DashboardWidgetDemo = ({ widgetName, exerciseNumber }: { widgetName: string, exerciseNumber: number }) => {
-  return (
-    <div className="border-2 border-dashed border-gray-200 rounded-lg p-4 text-center text-gray-500 text-sm">
-      {widgetName}
-      <br />
-      <span className="text-xs">Exercise {exerciseNumber}</span>
-    </div>
-  );
-};
+import { useState } from 'react';
+import { mockCustomers, Customer } from '@/data/mock-customers';
+import CustomerSelector from '@/components/CustomerSelector';
+import DomainHealthWidget from '@/components/DomainHealthWidget';
 
 export default function Home() {
+  const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
+
   return (
     <div className="min-h-screen bg-gray-50 p-4">
       {/* Header */}
@@ -60,45 +25,42 @@ export default function Home() {
         <h2 className="text-xl font-semibold mb-4">Workshop Progress</h2>
         <div className="space-y-2 text-sm text-gray-600">
           <p>✅ Setup Complete - Next.js app is running</p>
-          <p className="text-gray-400">⏳ Exercise 3: CustomerCard component (implement to see here)</p>
-          <p className="text-gray-400">⏳ Exercise 4: CustomerSelector integration</p>
-          <p className="text-gray-400">⏳ Exercise 5: Domain Health widget</p>
+          <p>✅ Exercise 3: CustomerCard component</p>
+          <p>✅ Exercise 4: CustomerSelector integration</p>
+          <p>✅ Exercise 5: Domain Health widget</p>
           <p className="text-gray-400">⏳ Exercise 9: Production-ready features</p>
         </div>
       </div>
 
-      {/* Component Showcase Area */}
+      {/* Main Dashboard */}
       <div className="space-y-8">
-        {/* CustomerCard Section */}
-        <section className="bg-white rounded-lg shadow p-6">
-          <h3 className="text-lg font-semibold mb-4">CustomerCard Component</h3>
-          <Suspense fallback={<div className="text-gray-500">Loading...</div>}>
-            <CustomerCardDemo />
-          </Suspense>
-        </section>
+        {/* Customer Selector + Domain Health side by side on wider screens */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <section className="lg:col-span-1 bg-white rounded-lg shadow p-6">
+            <h3 className="text-lg font-semibold mb-4">Customers</h3>
+            <CustomerSelector
+              customers={mockCustomers}
+              onSelect={setSelectedCustomer}
+            />
+          </section>
 
-        {/* Dashboard Widgets Section */}
-        <section className="bg-white rounded-lg shadow p-6">
-          <h3 className="text-lg font-semibold mb-4">Dashboard Widgets</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <DashboardWidgetDemo widgetName="Domain Health Widget" exerciseNumber={5} />
-            <DashboardWidgetDemo widgetName="Market Intelligence" exerciseNumber={6} />
-            <DashboardWidgetDemo widgetName="Predictive Alerts" exerciseNumber={8} />
-          </div>
-        </section>
-
-        {/* Getting Started */}
-        <section className="bg-blue-50 rounded-lg p-6">
-          <h3 className="text-lg font-semibold text-blue-900 mb-2">Ready to Start Building?</h3>
-          <p className="text-blue-800 mb-4">
-            Follow along with the workshop exercises to see this dashboard come to life with AI-generated components.
-          </p>
-          <div className="text-sm text-blue-700">
-            <p className="mb-1"><strong>Next:</strong> Exercise 1 - Create your first specification</p>
-            <p className="mb-1"><strong>Then:</strong> Exercise 3 - Generate your first component</p>
-            <p className="text-xs text-blue-600">💡 Tip: Refresh this page after completing exercises to see your progress!</p>
-          </div>
-        </section>
+          <section className="lg:col-span-2 space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
+              <DomainHealthWidget customer={selectedCustomer} />
+              {/* Placeholders for upcoming exercises */}
+              <div className="border-2 border-dashed border-gray-200 rounded-lg p-4 text-center text-gray-500 text-sm">
+                Market Intelligence
+                <br />
+                <span className="text-xs">Exercise 6</span>
+              </div>
+              <div className="border-2 border-dashed border-gray-200 rounded-lg p-4 text-center text-gray-500 text-sm">
+                Predictive Alerts
+                <br />
+                <span className="text-xs">Exercise 8</span>
+              </div>
+            </div>
+          </section>
+        </div>
       </div>
     </div>
   );
